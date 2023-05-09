@@ -1,0 +1,98 @@
+@use './base';
+
+.container {
+  max-width: 120rem;
+  margin: 8rem auto;
+  background-color: var(--color-grey-light-1);
+  box-shadow: var(--shadow-dark);
+
+  min-height: 50rem;
+
+  @media only screen and (max-width: base.$bp-largest) {
+    margin: 0;
+    max-width: 100%;
+    width: 100%;
+  }
+}
+
+.header {
+  font-size: 1.4rem; // defining for input font sizes because they set on inherit and default is small for the input placeholder.
+  height: 7rem;
+  background-color: #fff;
+  border-bottom: var(--line); // width - type - color
+
+  display: flex;
+  justify-content: space-between; // align on main axis
+  align-items: center; // align on cross axis
+
+  @media only screen and (max-width: base.$bp-smallest) {
+    flex-wrap: wrap;
+    align-content: space-around;
+    height: 11rem;
+  }
+}
+
+.content {
+  display: flex;
+
+  @media only screen and (max-width: base.$bp-medium) {
+    flex-direction: column;
+  }
+}
+
+.sidebar {
+  background-color: var(--color-grey-dark-1);
+  flex: 0 0 18%; // grow shrink basis -> we set %18 width with flex-basis in flex shorthand.
+  display: flex; // turn into flex container
+  flex-direction: column; // change the main axis way from left to right, to top to bottom.
+  justify-content: space-between; // Pushing .legal down the page, check .legal and .side-nav in html. Using the white space between of them.
+}
+
+.hotel-view {
+  background-color: #fff;
+  flex: 1; // grow shrink basis -> we set the element grows as much as it can in flex shorthand.
+}
+
+.detail {
+  font-size: 1.4rem; // defined here so .description and .user-reviews are going to inherit.
+  display: flex;
+  // 4.5rem padding same as 4.5 rem margin-right,
+  //to give same distance between .description - .user-reviews and distance between of them to .detail container same on the 4 corners.
+  padding: 4.5rem;
+  background-color: var(--color-grey-light-1);
+  border-bottom: var(--line);
+
+  @media only screen and (max-width: base.$bp-medium) {
+    padding: 3rem;
+  }
+
+  @media only screen and (max-width: base.$bp-small) {
+    flex-direction: column;
+  }
+}
+
+.description {
+  background-color: #fff;
+  padding: 3rem;
+  box-shadow: var(--shadow-light); // offset-x | offset-y | blur-radius | color
+  flex: 0 0 60%; // grow - shrink - basis -> Define 60% width with flex-basis on flex shorthand property.
+  margin-right: 4.5rem; // We give some margin between of them (.description - .user-reviews)
+
+  @media only screen and (max-width: base.$bp-medium) {
+    padding: 2rem;
+    margin-right: 3rem;
+  }
+
+  @media only screen and (max-width: base.$bp-small) {
+    margin-right: 0;
+    margin-bottom: 3rem;
+  }
+}
+
+.user-reviews {
+  flex: 1; // grow - shrink - basis -> Define flex-grow: 1 to occupy all the available space in flex shorthand property.
+
+  display: flex; // for position to button
+  flex-direction: column; // for position to button
+  align-items: center; // for position to button
+}

@@ -1,0 +1,592 @@
+@use './base';
+
+/////////////////////
+//////LOGO//////////
+.logo {
+  height: 3.25rem;
+  margin-left: 2rem;
+}
+//////////////////////
+//////SEARCH//////////
+.search {
+  flex: 0 0 40%; // grow shrink basis => we define 40% width with flex-basis in flex shortend.
+
+  display: flex; // flex item is becoming a flex container (nested Flexbox) .search became flex container while in .header flex container.
+  align-items: center; // centers the elements on cross axis.
+  justify-content: center; // centers the elements on main axis.
+
+  @media only screen and (max-width: base.$bp-smallest) {
+    order: 1;
+    flex: 0 0 100%;
+    background-color: var(--color-grey-light-2);
+  }
+
+  &__input {
+    font-family: inherit; // input element doesn't inherit font features automatically so from parent element so define again.
+    font-size: inherit;
+    color: inherit;
+    background-color: var(--color-grey-light-2);
+    border: none;
+    padding: 0.7rem 2rem;
+    border-radius: 100px;
+    width: 90%; // leave room to expand on focus.
+    transition: all 0.2s;
+    margin-right: -3.25rem; // showing the button icon kinda on the input element.
+
+    &:focus {
+      outline: none;
+      width: 100%; // expand to 100% on focus.
+      background-color: var(--color-grey-light-3);
+    }
+
+    &::placeholder {
+      font-weight: 100;
+      color: var(--color-grey-light-4);
+    }
+  }
+
+  &__input:focus + &__button {
+    // input and button are siblings, we can use the adjacent selector '+' to select the sibling of the selected input.
+    background-color: var(--color-grey-light-3);
+  }
+
+  &__button {
+    border: none;
+    background-color: var(--color-grey-light-2);
+
+    &:focus {
+      outline: none;
+    }
+
+    &:active {
+      transform: translateY(0.2rem);
+    }
+  }
+
+  &__icon {
+    height: 2rem;
+    width: 2rem;
+    fill: var(--color-grey-dark-3); // we specify color to svg images.
+  }
+}
+////////////////////////////////
+//////USER NAVIGATION//////////
+
+///the parent .header is a flex container, .user-nav is also flex container and its elements are also another nested flex container.
+.user-nav {
+  align-self: stretch; // user-nav fills the entire space of the header, all the way beginning to end. (we use it for icon hover effect)
+
+  display: flex;
+  align-items: center;
+
+  & > * {
+    // select all the direct children of the element (user-nav)
+    padding: 0 2rem;
+    cursor: pointer;
+    height: 100%;
+    display: flex; //turned it to flex container to align the icons center again. (check align-self on .user-nav)
+    align-items: center; //turned it to flex container to align the icons center again. (check align-self on .user-nav)
+  }
+
+  & > *:hover {
+    background-color: var(--color-grey-light-2);
+  }
+
+  &__icon-box {
+    position: relative; // using for notification position.
+  }
+
+  &__icon {
+    height: 2.25rem;
+    width: 2.25rem;
+    fill: var(--color-grey-dark-2);
+  }
+
+  &__notification {
+    font-size: 0.8rem;
+    height: 1.75rem;
+    width: 1.75rem;
+    border-radius: 50%;
+    background-color: var(--color-primary);
+    color: #fff;
+    position: absolute; // using for notification position.
+    top: 1.5rem; // using for notification position.
+    right: 1.1rem; // using for notification position.
+
+    display: flex; // used flexbox to center the text in the span element.
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__user-photo {
+    height: 3.75rem;
+    width: 3.75rem;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-right: 1rem;
+  }
+}
+
+////////////////////////////////
+//////SIDE NAVIGATION//////////
+.side-nav {
+  font-size: 1.4rem;
+  list-style: none;
+  margin-top: 3.5rem;
+
+  @media only screen and (max-width: base.$bp-medium) {
+    display: flex;
+    margin: 0;
+  }
+
+  &__item {
+    position: relative; // for position of the item::before psuedo element position.
+
+    &:not(:last-child) {
+      // defines margin-bottom for items (links) but not the last one.
+      margin-bottom: 0.5rem;
+
+      @media only screen and (max-width: base.$bp-medium) {
+        margin: 0;
+      }
+    }
+
+    @media only screen and (max-width: base.$bp-medium) {
+      flex: 1; // grow - shrink - basis give items grow as much as possible they can in this media-query.
+    }
+  }
+
+  &__item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0.3rem;
+    background-color: var(--color-primary);
+    //transform-origin property set to center automatically so it starts to grow from center to Y direction. (description for scaleY)
+    transform: scaleY(0);
+    transition: transform 0.2s, width 0.4s cubic-bezier(1, 0, 0, 1) 0.2s,
+      background-color 0.1s;
+    // important! -> width 0.2s is the delay so we can create that nice hover effect, 0.2s because it starts where the first transform ends
+  }
+
+  &__item:hover::before,
+  &__item--active::before {
+    transform: scaleY(1);
+    width: 100%; // expands to 100% as part of the hover effect. (check the width in ::before statement)
+  }
+
+  &__item:active::before {
+    background-color: var(--color-primary-light);
+  }
+
+  &__link:link,
+  &__link:visited {
+    color: var(--color-grey-light-1);
+    text-decoration: none;
+    text-transform: uppercase;
+    padding: 1.5rem 3rem;
+    position: relative; // it only works if element has specified position. (using z-index to put the link top of the hover effect)
+    z-index: 10; // it only works if element has specified position. (using z-index to put the link top of the hover effect)
+
+    display: flex; // aligns the icon and text
+    align-items: center; // aligns the icon and text
+
+    @media only screen and (max-width: base.$bp-medium) {
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    @media only screen and (max-width: base.$bp-small) {
+      flex-direction: column;
+      padding: 1.5rem 0.5rem;
+    }
+  }
+
+  &__icon {
+    width: 1.75rem;
+    height: 1.75rem;
+    margin-right: 2rem;
+    fill: currentColor; // defines the color for the icon from itself (if it defines) or from parent element. (Icon is in the link element)
+
+    @media only screen and (max-width: base.$bp-small) {
+      margin: 0;
+      margin-bottom: 0.7rem;
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+  }
+}
+////////////////////////////////
+//////LEGAL TEXT///////////////
+.legal {
+  font-size: 1.2rem;
+  color: var(--color-grey-light-4);
+  text-align: center;
+  padding: 2.5rem;
+
+  @media only screen and (max-width: base.$bp-medium) {
+    display: none;
+  }
+}
+////////////////////////////////
+//////GALLERY//////////////////
+.gallery {
+  display: flex; // put the figure elements (pictures) side by side.
+
+  &__item {
+    border: 0.3px solid black;
+  }
+
+  &__photo {
+    width: 100%; // define width with percentages so image stays fluid (responsive design)
+    display: block; // to avoid small space underneath the images.
+  }
+}
+////////////////////////////////
+//////HOTEL OVERVIEW///////////
+.overview {
+  display: flex; // set all the child elements side by side.
+  align-items: center; // aligns items along the cross axis.
+  border-bottom: var(--line);
+
+  &__heading {
+    font-size: 2.25rem;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 1.5rem 3rem;
+
+    @media only screen and (max-width: base.$bp-small) {
+      font-size: 1.8rem;
+      padding: 1.25rem 2rem;
+    }
+  }
+
+  &__stars {
+    margin-right: auto; // we use this trick the position the starts on the left and rest of the elements on the right side.
+    display: flex; // to remove space on the icon star elements. they create that because they are svg (kinda little bug) lecture 81
+  }
+
+  &__icon-star,
+  &__icon-location {
+    width: 1.75rem;
+    height: 1.75rem;
+    fill: var(--color-primary);
+  }
+
+  &__location {
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+  }
+
+  &__icon-location {
+    margin-right: 0.5rem;
+  }
+
+  &__rating {
+    background-color: var(--color-primary);
+    color: #fff;
+    margin-left: 3rem;
+    padding: 0 2.25rem;
+    align-self: stretch; // occupy all the space from top to bottom (comment it out to see the difference)
+
+    display: flex; // use it to center the texts in the container (rating-average and rating-count)
+    flex-direction: column; // use it to center the texts in the container (rating-average and rating-count)
+    align-items: center; // use it to center the texts in the container (rating-average and rating-count)
+    justify-content: center; // use it to center the texts in the container (rating-average and rating-count)
+
+    @media only screen and (max-width: base.$bp-small) {
+      padding: 0 1.5rem;
+    }
+  }
+
+  &__rating-average {
+    font-size: 2.25rem;
+    font-weight: 300;
+    margin-bottom: -0.3rem; // decrease the space between of two text
+
+    @media only screen and (max-width: base.$bp-small) {
+      font-size: 1.8rem;
+    }
+  }
+
+  &__rating-count {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+
+    @media only screen and (max-width: base.$bp-small) {
+      font-size: 0.5rem;
+    }
+  }
+}
+////////////////////////////////
+//////BUTTON INLINE////////////
+.btn-inline {
+  border: none;
+  color: var(--color-primary);
+  font-size: inherit; // inherit from .overview__location (parent)
+  border-bottom: 1px solid currentColor;
+  padding: 0.2rem;
+  display: inline-block; //default display is inline and inline display does not support top and bottom padding. (btn-inline has padding)
+  background-color: transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  & span {
+    margin-left: 0.3rem;
+    transition: margin-left 0.2s;
+  }
+
+  &:hover {
+    color: var(--color-grey-dark-1);
+
+    span {
+      margin-left: 0.8rem;
+    }
+  }
+
+  &:focus {
+    outline: none;
+    animation: pulsate 1s infinite; // keyframe name - duration - sets for infinite
+  }
+}
+
+@keyframes pulsate {
+  0% {
+    transform: scale(1);
+    box-shadow: none;
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 1rem 4rem rgba(0, 0, 0, 0.25);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: none;
+  }
+}
+////////////////////////////////
+//////PARAGRAPH////////////////
+// last-of-type will select the last element of its element type, we used it to give space between of two paragraph elements.
+.paragraph:not(:last-of-type) {
+  margin-bottom: 2rem;
+}
+
+////////////////////////////////
+//////LIST/////////////////////
+.list {
+  list-style: none;
+  margin: 3rem 0; // margin on top-bottom
+  padding: 3rem 0;
+  border-top: var(--line);
+  border-bottom: var(--line);
+
+  display: flex;
+  flex-wrap: wrap; // Allows the elements to wrap to new lines.
+  // !important -> The flex-wrap property sets whether flex items are forced onto one line or can wrap onto multiple lines.
+
+  &__item {
+    flex: 0 0 50%; // shrink - grow - basis -> 50% width to set them side by side in two column. (it works together with flex-wrap)
+    margin-bottom: 0.7rem;
+  }
+
+  &__item::before {
+    // Use ::before psuedo element to put arrow icon near by the list items (alternative to set them in HTML)
+    // (It does not work with sprite.svg, only single svg file)
+    content: '';
+    display: inline-block; // Height and width of an inline element cannot be set, to show the psuedo element we set them block element.
+    height: 1rem;
+    width: 1rem;
+    margin-right: 0.7rem;
+
+    // // Older browsers
+    background-image: url(../img/chevron-thin-right.svg);
+    background-size: cover;
+
+    // Newer browsers - masks
+    @supports (-webkit-mask-image: url()) or (mask-image: url()) {
+      background-color: var(--color-primary);
+      // Mask defines an area where we can look through the element and see what's behind that element. We see the color-primary bgcolor
+      // from mask.
+      -webkit-mask-image: url(../img/chevron-thin-right.svg);
+      mask-image: url(../img/chevron-thin-right.svg);
+      -webkit-mask-size: cover; // Very similar to background-size, icon covers the entire element
+      mask-size: cover; // Very similar to background-size, icon covers the entire element
+      background-image: none;
+    }
+  }
+}
+////////////////////////////////
+//////RECOMMEND////////////////
+.recommend {
+  font-size: 1.3rem;
+  color: var(--color-grey-dark-3);
+
+  display: flex;
+  align-items: center;
+
+  &__count {
+    margin-right: auto; // Creates necessary space between .recommend__count and the .recommend__friends.
+  }
+
+  &__friends {
+    display: flex;
+  }
+
+  &__photo {
+    box-sizing: content-box;
+    // In this situation we want to border to be added on top of our height and width. Normally we set it opposite to normalize CSS.
+    height: 4rem;
+    width: 4rem;
+    border-radius: 50%; // In order to make the images round.
+    border: 3px solid #fff;
+
+    &:not(:last-child) {
+      margin-right: -2rem; // we move the images top of each other
+    }
+  }
+}
+////////////////////////////////
+//////REVIEWS////////////////
+.review {
+  background-color: #fff;
+  box-shadow: var(--shadow-light);
+  padding: 3rem;
+  margin-bottom: 3.5rem;
+  position: relative;
+  overflow: hidden; // to prevent the ::before puesudo element overflowing.
+
+  @media only screen and (max-width: base.$bp-medium) {
+    padding: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  &__text {
+    margin-bottom: 2rem;
+    z-index: 10; // it only works if you define a position.
+    position: relative; // it only works if you define a position. (for z-index)
+  }
+
+  &__user {
+    display: flex;
+    align-items: center;
+  }
+
+  &__photo {
+    height: 4.5rem;
+    width: 4.5rem;
+    border-radius: 50%;
+    margin-right: 1.5rem;
+  }
+
+  &__user-box {
+    margin-right: auto;
+  }
+
+  &__user-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+
+  &__user-date {
+    font-size: 1rem;
+    color: var(--color-grey-dark-3);
+  }
+
+  &__rating {
+    color: var(--color-primary);
+    font-size: 2.2rem;
+    font-weight: 300;
+  }
+
+  &::before {
+    content: '\201C';
+    position: absolute;
+    top: -2.75rem;
+    left: -1rem;
+    line-height: 1; // big line height was causing the icon get big space and position wrong.
+    font-size: 20rem;
+    color: var(--color-grey-light-2);
+    font-family: sans-serif; // We don't want it to inherit, we want it to use default.
+    z-index: 1; // it only works if you define a position.
+  }
+}
+
+////////////////////////////////
+/// CALL TO ACTION /////////////
+.cta {
+  padding: 3.5rem 0;
+  text-align: center;
+
+  @media only screen and (max-width: base.$bp-medium) {
+    padding: 2.5rem 0;
+  }
+
+  &__book-now {
+    font-size: 2rem;
+    font-weight: 300;
+    text-transform: uppercase;
+    margin-bottom: 2.5rem;
+  }
+}
+////////////////////////////////
+/// CALL TO ACTION /////////////
+.btn {
+  font-size: 1.5rem;
+  font-weight: 300;
+  text-transform: uppercase;
+  border-radius: 100px;
+  border: none;
+  background-image: linear-gradient(
+    to right,
+    var(--color-primary-light),
+    var(--color-primary-dark)
+  );
+  color: #fff;
+  position: relative;
+  overflow: hidden; // to hide the __invisible element.
+  cursor: pointer;
+
+  & > * {
+    display: inline-block; // span is a inline element, we define inline-block to use padding.
+    height: 100%;
+    width: 100%;
+    transition: all 0.2s;
+  }
+  &__visible {
+    padding: 2rem 7.5rem; // top/bottom - left/right, this padding also defines size of the button.
+  }
+
+  &__invisible {
+    position: absolute;
+    padding: 2rem;
+    top: -100%; // it is gonna move up the __invisible span exactly size of the btn element.
+    left: 0;
+  }
+
+  &:hover {
+    background-image: linear-gradient(
+      to left,
+      var(--color-primary-light),
+      var(--color-primary-dark)
+    );
+  }
+
+  &:hover &__visible {
+    transform: translateY(100%); // translate 100% its height.
+  }
+
+  &:hover &__invisible {
+    top: 0;
+  }
+
+  &:focus {
+    outline: none;
+    animation: pulsate 1s infinite; // name of the animation - duration - infinite run
+  }
+}
